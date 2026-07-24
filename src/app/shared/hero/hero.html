@@ -1,45 +1,98 @@
-<div class="bg-slate-900 py-20 relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-4 relative flex items-center">
+<section class="bg-slate-50 py-16 md:py-24 px-4 min-h-screen flex flex-col justify-center">
+  <div class="max-w-6xl mx-auto w-full">
     
-    <!-- Contenedor de los 4 botones (Puntos verdes) a la izquierda -->
-    <div class="absolute left-0 flex flex-col space-y-4 ml-2 md:ml-0 z-10">
-      <!-- El *ngFor dibuja un botón por cada imagen. El [ngClass] hace brillar al seleccionado -->
-      <button *ngFor="let img of imagenes; let i = index" 
-              (click)="cambiarImagen(i)"
-              [ngClass]="{'bg-emerald-400 scale-125': imagenActual === i, 'bg-emerald-900 hover:bg-emerald-600': imagenActual !== i}"
-              class="w-4 h-4 rounded-full transition-all duration-300 shadow-lg cursor-pointer">
-      </button>
+    <!-- Cuadrícula Principal: Copywriting Izquierda | Carrusel Derecha -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+      
+      <!-- Lado Izquierdo: Copywriting de Alto Impacto -->
+      <div>
+        <span class="bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wider mb-6 inline-block border border-green-200 shadow-sm">
+          ⚙️ Tecnología Italiana AEB Lovato
+        </span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
+          {{ titulo }}
+        </h1>
+        
+        <p class="text-lg md:text-xl text-slate-600 mb-8 leading-relaxed">
+          {{ contenido }}
+        </p>
+        
+        <!-- Botón de WhatsApp Verde de Alta Conversión -->
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <a href="https://wa.me/593992339000?text=Hola,%20vi%20su%20página%20web%20y%20deseo%20cotizar%20una%20instalación%20de%20GLP%20para%20mi%20vehículo." 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="w-full sm:w-auto text-center bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+            💬 {{ textoBoton || 'Cotizar por WhatsApp' }}
+          </a>
+          <span class="text-sm text-slate-500 font-medium">
+            📍 Taller en La Nueva Aurora, Sur de Quito
+          </span>
+        </div>
+      </div>
+
+      <!-- Lado Derecho: Carrusel de Imágenes -->
+      <div class="relative flex flex-col items-center justify-center">
+        <!-- Brillo decorativo de fondo -->
+        <div class="absolute -inset-2 bg-gradient-to-tr from-green-600 to-slate-900 rounded-3xl opacity-10 blur-lg"></div>
+        
+        <!-- Contenedor relativo para la imagen y los controles -->
+        <div class="relative w-full max-w-lg">
+          
+          <!-- Imagen Dinámica del Carrusel -->
+          <img [src]="imagenes[imagenActual]" 
+               alt="Instalación GLP Quito" 
+               class="w-full h-[400px] md:h-[480px] object-cover rounded-2xl shadow-2xl border border-white transition-all duration-500">
+          
+          <!-- Controles del Carrusel (Puntos en barra flotante estilo galería) -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-3 bg-slate-900/70 backdrop-blur-sm px-4 py-2.5 rounded-full border border-white/20 z-10 shadow-lg">
+            <button *ngFor="let img of imagenes; let i = index" 
+                    (click)="cambiarImagen(i)"
+                    [ngClass]="{'bg-green-400 scale-125': imagenActual === i, 'bg-white/60 hover:bg-white': imagenActual !== i}"
+                    class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer">
+            </button>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
-    <!-- Contenido Principal -->
-    <div class="pl-10 md:pl-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+    <!-- BLOQUE DE CONFIANZA (Indicadores de Marketing) -->
+    <div class="border-t border-slate-200 pt-12">
+      <p class="text-center text-sm font-bold text-slate-400 uppercase tracking-widest mb-8">
+        ¿Por qué más de 500 conductores en Quito confían en nosotros?
+      </p>
       
-      <!-- Lado Izquierdo: Textos -->
-      <div>
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-          Instalación de Gas GLP para todo tipo de autos
-        </h1>
-        <p class="text-slate-300 text-lg mb-8">
-          Ahorro de gasolina al 98%. Sistema de GLP AEB Lovato seguro, económico y eficiente. Servicio técnico especializado en el Sur de Quito, La Nueva Aurora.
-        </p>
-        <!-- Botón de WhatsApp con redirección -->
-        <a href="https://wa.me/593992339000?text=Hola,%20vi%20su%20página%20web%20y%20deseo%20cotizar%20una%20instalación%20de%20GLP%20para%20mi%20vehículo." 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="inline-block bg-slate-800 text-white font-bold py-3 px-6 rounded-lg border border-slate-700 hover:bg-slate-700 hover:border-slate-500 transition-all shadow-md text-center">
-            Cotizar por WhatsApp
-        </a>
-      </div>
- 
-      <!-- Lado Derecho: Imagen Dinámica -->
-      <div class="flex justify-center lg:justify-end">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         
-        <img [src]="imagenes[imagenActual]" 
-             alt="Instalación GLP Quito" 
-             class="rounded-2xl shadow-2xl w-full max-w-lg h-[350px] object-cover border border-slate-700 transition-opacity duration-500">
-             
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="text-2xl mb-2">⭐⭐⭐⭐⭐</div>
+          <h4 class="text-2xl font-black text-slate-900">500+</h4>
+          <p class="text-sm font-medium text-slate-600">Instalaciones Exitosas</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="text-2xl mb-2">🏆</div>
+          <h4 class="text-2xl font-black text-slate-900">15 Años</h4>
+          <p class="text-sm font-medium text-slate-600">De Experiencia Real</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="text-2xl mb-2">🛡️</div>
+          <h4 class="text-2xl font-black text-slate-900">Garantía</h4>
+          <p class="text-sm font-medium text-slate-600">Escrita en Equipos</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="text-2xl mb-2">⚙️</div>
+          <h4 class="text-2xl font-black text-slate-900">100% Original</h4>
+          <p class="text-sm font-medium text-slate-600">Repuestos AEB Lovato</p>
+        </div>
+
       </div>
-      
     </div>
+
   </div>
-</div>
+</section>

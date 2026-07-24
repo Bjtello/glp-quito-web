@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core'; // 1. Agregamos Input aquí
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./hero.css']
 })
 export class Hero {
+  // 2. Declaramos las variables para recibir los textos desde home.html
+  @Input() titulo: string = '';
+  @Input() contenido: string = '';
+  @Input() textoBoton: string = '';
+
   // Solo tus 4 URLs de Postimages
   imagenes: string[] = [
     'https://i.postimg.cc/BZPV5vKv/Gemini-Generated-Image-z4ywvoz4ywvoz4yw.png',
