@@ -12,25 +12,33 @@ import { Usuario } from '../../model/usuario';
   styleUrls: ['./formulario-reserva.css']
 })
 export class FormularioReserva implements OnInit {
-  
+
   // 1. Usamos inyección moderna en lugar del constructor
   private clienteServicio = inject(ClienteServicio);
 
   // 2. Signals para manejar la lista de clientes en tiempo real
   listaClientes = signal<Usuario[]>([]);
-  
+
   // 3. Variable para controlar si estamos creando o actualizando
   editando = false;
+
+  rolActual = 'usuario';
+  isAdmin = false;
 
   // Objeto para enlazar con el formulario
   nuevoCliente: Usuario = {
     nombre: '',
     telefono: '',
     placaVehiculo: '',
-    tipoServicio: ''
+    tipoServicio: '',
+    estado: 'en curso'
   };
 
   ngOnInit(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.rolActual = localStorage.getItem("userRole") || 'usuario';
+      this.isAdmin = this.rolActual === 'admin';
+    }
     this.obtenerClientes();
   }
 
@@ -48,19 +56,30 @@ export class FormularioReserva implements OnInit {
       return;
     }
 
+    if (!this.nuevoCliente.estado) {
+      this.nuevoCliente.estado = 'en curso';
+    }
+
     if (this.editando && this.nuevoCliente.id) {
-      // Si estamos editando, usamos putCliente (asegúrate de tener este método en tu servicio)
+      // Si estamos editando, usamos putCliente
       this.clienteServicio.putCliente(this.nuevoCliente.id, this.nuevoCliente).subscribe(() => {
-        this.obtenerClientes();
         this.limpiarFormulario();
         alert('¡Agendamiento actualizado con éxito!');
       });
     } else {
       // Si es un registro nuevo, usamos postCliente
       this.clienteServicio.postCliente(this.nuevoCliente).subscribe(() => {
-        this.obtenerClientes();
         this.limpiarFormulario();
         alert('¡Agendamiento enviado con éxito a la base de datos!');
+      });
+    }
+  }
+
+  marcarComoFinalizado(cliente: Usuario): void {
+    if (cliente.id) {
+      const clienteActualizado = { ...cliente, estado: 'finalizado' };
+      this.clienteServicio.putCliente(cliente.id, clienteActualizado).subscribe(() => {
+        // DB triggers onValue, signal automagically updates
       });
     }
   }
@@ -68,8 +87,7 @@ export class FormularioReserva implements OnInit {
   eliminarCliente(id: string | undefined): void {
     if (id && confirm('¿Desea eliminar este agendamiento de la cola?')) {
       this.clienteServicio.deleteCliente(id).subscribe(() => {
-        // Actualizamos el signal directamente para que desaparezca al instante en pantalla
-        this.listaClientes.update(clientes => clientes.filter(c => c.id !== id));
+        // Firebase onValue emitira de nuevo, la DB es la única fuente de verdad
       });
     }
   }
@@ -81,6 +99,6 @@ export class FormularioReserva implements OnInit {
 
   limpiarFormulario(): void {
     this.editando = false;
-    this.nuevoCliente = { nombre: '', telefono: '', placaVehiculo: '', tipoServicio: '' };
+    this.nuevoCliente = { nombre: '', telefono: '', placaVehiculo: '', tipoServicio: '', estado: 'en curso' };
   }
 }

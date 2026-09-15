@@ -3,5 +3,6 @@ export interface Usuario {
   nombre: string;
   telefono: string;
   placaVehiculo: string;
-  tipoServicio: string; 
+  tipoServicio: string;
+  estado?: string; // 'en curso' | 'finalizado'
 }

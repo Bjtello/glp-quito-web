@@ -1,56 +1,82 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Usuario } from '../model/usuario';
+import { getDatabase, ref, push, set, remove, update, onValue, get, child } from 'firebase/database';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteServicio {
 
-  private http = inject(HttpClient);
-
-  // Aquí está tu URL exacta con el endpoint /clientes.json
-  private API_CLIENTES = 'https://glp-quito-db-default-rtdb.firebaseio.com/clientes.json';
-  
-  // Base para peticiones con ID específico (PUT y DELETE)
-  private API_BASE = 'https://glp-quito-db-default-rtdb.firebaseio.com/clientes';
-
   // Guardar un nuevo agendamiento (POST)
   postCliente(cliente: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(this.API_CLIENTES, cliente);
+    return new Observable(observer => {
+      const db = getDatabase();
+      const clientesRef = ref(db, 'clientes');
+      const nuevoRef = push(clientesRef);
+      set(nuevoRef, cliente).then(() => {
+        observer.next({ ...cliente, id: nuevoRef.key as string });
+        observer.complete();
+      }).catch(err => observer.error(err));
+    });
   }
 
-  // Obtener todos los clientes (GET)
+  // Obtener todos los clientes (GET) -> Realtime
   getClientes(): Observable<Usuario[]> {
-    return this.http
-      .get<{ [key: string]: Usuario }>(this.API_CLIENTES)
-      .pipe(
-        map(datos => {
-          if (!datos) {
-            return [];
-          }
-          return Object.keys(datos).map(id => ({
+    return new Observable(observer => {
+      const db = getDatabase();
+      const clientesRef = ref(db, 'clientes');
+      onValue(clientesRef, (snapshot) => {
+        const datos = snapshot.val();
+        if (!datos) {
+          observer.next([]);
+        } else {
+          const arr = Object.keys(datos).map(id => ({
             ...datos[id],
             id: id
           }));
-        })
-      );
+          observer.next(arr);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+    });
   }
 
   // Buscar agendamiento por ID
   getClienteById(id: string): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.API_BASE}/${id}.json`);
+    return new Observable(observer => {
+      const db = getDatabase();
+      get(child(ref(db), `clientes/${id}`)).then(snapshot => {
+        if (snapshot.exists()) {
+          observer.next({ ...snapshot.val(), id });
+        } else {
+          observer.error("Not found");
+        }
+        observer.complete();
+      }).catch(err => observer.error(err));
+    });
   }
 
   // Actualizar datos de un cliente (PUT)
   putCliente(id: string, cliente: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.API_BASE}/${id}.json`, cliente);
+    return new Observable(observer => {
+      const db = getDatabase();
+      update(ref(db, `clientes/${id}`), cliente).then(() => {
+        observer.next(cliente);
+        observer.complete();
+      }).catch(err => observer.error(err));
+    });
   }
 
   // Eliminar un agendamiento (DELETE)
   deleteCliente(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_BASE}/${id}.json`);
+    return new Observable(observer => {
+      const db = getDatabase();
+      remove(ref(db, `clientes/${id}`)).then(() => {
+        observer.next();
+        observer.complete();
+      }).catch(err => observer.error(err));
+    });
   }
 }
