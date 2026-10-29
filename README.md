@@ -15,6 +15,7 @@ A continuación se detalla todo lo que el sistema tiene desarrollado y operativo
   - Autenticación con correo y contraseña vía Firebase Authentication (`signInWithEmailAndPassword`).
   - Consulta automática del rol asignado en la base de datos en tiempo real (`usuarios/{uid}`).
   - Persistencia del rol en `localStorage` y redirección inmediata a `/usuarios`.
+  - **Recuperación de contraseña**: enlace interactivo *"¿Olvidaste tu contraseña?"* que envía automáticamente un correo con enlace seguro de restablecimiento mediante `sendPasswordResetEmail` de Firebase Auth.
 - **Registro de Clientes (`/registro`)**:
   - Creación pública de nuevas cuentas de cliente.
   - Asignación automática del rol predeterminado `'usuario'` en Realtime Database.

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { getDatabase, ref, get, child } from "firebase/database";
 
 @Component({
@@ -32,7 +32,7 @@ export class Login {
             const datosUsuario = snapshot.val();
             console.log("Rol del usuario:", datosUsuario.rol);
             localStorage.setItem("userRole", datosUsuario.rol);
-            this.router.navigate(['/usuarios']); // Según el user va a /inicio, pero dijo que va a /usuarios
+            this.router.navigate(['/usuarios']);
           } else {
             // Default if no role is explicitly assigned
             localStorage.setItem("userRole", "usuario");
@@ -47,4 +47,35 @@ export class Login {
         this.errorMsj = "Correo o contraseña incorrectos.";
       });
   }
+
+  recuperarContrasena() {
+    const correoActual = this.email.trim();
+
+    if (!correoActual) {
+      alert('Por favor, ingresa tu correo electrónico en el campo superior y presiona este botón nuevamente.');
+      return;
+    }
+
+    const auth = getAuth();
+
+    sendPasswordResetEmail(auth, correoActual)
+      .then(() => {
+        alert(`Te hemos enviado un correo a ${correoActual} con las instrucciones para restablecer tu contraseña. Revisa tu bandeja de entrada o carpeta de Spam.`);
+      })
+      .catch((error) => {
+        console.error('Error al enviar correo de recuperación:', error);
+        
+        // Manejo de errores comunes
+        if (error.code === 'auth/invalid-email') {
+          alert('El formato del correo es inválido.');
+        } else if (error.code === 'auth/user-not-found') {
+          alert('No existe ninguna cuenta registrada con este correo.');
+        } else {
+          alert('Hubo un error al intentar enviar el correo. Verifica los datos.');
+        }
+      });
+  }
 }
+
+// Alias de compatibilidad
+export { Login as LoginComponent };
