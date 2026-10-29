@@ -1,0 +1,83 @@
+<div class="min-h-screen bg-slate-50 py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4">
+
+        <!-- Header -->
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span
+                class="bg-green-100 text-green-800 font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wider mb-4 inline-block border border-green-200 shadow-sm">
+                🔩 Catálogo de Repuestos
+            </span>
+            <h2 class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                Repuestos y <span class="text-green-600">Accesorios GLP</span>
+            </h2>
+            <p class="text-slate-500 text-lg">
+                Selecciona el repuesto que necesitas y solicítalo en tu próximo turno de mantenimiento.
+            </p>
+        </div>
+
+        <!-- Filtros por Categoría -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+            @for (cat of categorias; track cat) {
+            <button (click)="setFiltro(cat)" [class]="filtroActivo === cat
+            ? 'bg-green-600 text-white shadow-md shadow-green-200'
+            : 'bg-white text-slate-600 hover:bg-green-50 hover:text-green-700 border border-slate-200'"
+                class="px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 cursor-pointer">
+                {{ cat }}
+            </button>
+            }
+        </div>
+
+        <!-- Grid de Repuestos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (repuesto of repuestosFiltrados; track repuesto.id) {
+            <div
+                class="repuesto-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-lg hover:border-green-200 transition-all duration-300 group flex flex-col">
+
+                <!-- Badge opcional -->
+                @if (repuesto.badge) {
+                <span
+                    class="self-start mb-3 bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200">
+                    {{ repuesto.badge }}
+                </span>
+                }
+
+                <!-- Icono + Categoría -->
+                <div class="flex items-center justify-between mb-4">
+                    <div
+                        class="w-14 h-14 bg-green-50 group-hover:bg-green-100 rounded-2xl flex items-center justify-center text-3xl transition-colors duration-300">
+                        {{ repuesto.icono }}
+                    </div>
+                    <span
+                        class="text-xs font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-full">
+                        {{ repuesto.categoria }}
+                    </span>
+                </div>
+
+                <!-- Nombre y Descripción -->
+                <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors">
+                    {{ repuesto.nombre }}
+                </h3>
+                <p class="text-slate-500 text-sm leading-relaxed flex-grow mb-6">
+                    {{ repuesto.descripcion }}
+                </p>
+
+                <!-- CTA Button -->
+                <button (click)="solicitarRepuesto(repuesto)"
+                    class="w-full bg-green-600 hover:bg-green-700 active:scale-95 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md text-sm cursor-pointer flex items-center justify-center gap-2">
+                    <span>🗓️</span>
+                    Solicitar con Mantenimiento
+                </button>
+            </div>
+            }
+        </div>
+
+        <!-- Empty state -->
+        @if (repuestosFiltrados.length === 0) {
+        <div class="text-center py-20 text-slate-400">
+            <div class="text-5xl mb-4">🔍</div>
+            <p class="text-lg font-medium">No hay repuestos en esta categoría.</p>
+        </div>
+        }
+
+    </div>
+</div>

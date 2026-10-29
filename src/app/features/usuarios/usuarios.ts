@@ -10,3 +10,5 @@ import { FormularioReserva } from '../../shared/formulario-reserva/formulario-re
   styleUrl: './usuarios.css'
 })
 export class UsuariosComponent { }
+
+export { UsuariosComponent as Usuarios };

@@ -32,6 +32,8 @@
           class="hover:text-green-400 transition-colors font-medium text-lg">Equipos</a>
         <a routerLink="/nosotros" routerLinkActive="text-green-500"
           class="hover:text-green-400 transition-colors font-medium text-lg">Nosotros</a>
+        <a routerLink="/repuestos" routerLinkActive="text-green-500"
+          class="hover:text-green-400 transition-colors font-medium text-lg">Repuestos</a>
 
         <!-- Visible solamente si está autenticado -->
         <a *ngIf="isLoggedIn" routerLink="/usuarios" routerLinkActive="text-green-500"
@@ -68,6 +70,8 @@
       class="block text-gray-200 hover:text-green-500 font-medium text-lg">Equipos</a>
     <a routerLink="/nosotros" (click)="toggleMenu()" routerLinkActive="text-green-500"
       class="block text-gray-200 hover:text-green-500 font-medium text-lg">Nosotros</a>
+    <a routerLink="/repuestos" (click)="toggleMenu()" routerLinkActive="text-green-500"
+      class="block text-gray-200 hover:text-green-500 font-medium text-lg">Repuestos</a>
 
     <a *ngIf="isLoggedIn" routerLink="/usuarios" (click)="toggleMenu()" routerLinkActive="text-green-500"
       class="block text-gray-200 hover:text-green-500 font-medium text-lg">Cola de Turnos</a>

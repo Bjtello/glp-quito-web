@@ -1,0 +1,7 @@
+.repuesto-card {
+  transform: translateY(0);
+}
+
+.repuesto-card:hover {
+  transform: translateY(-4px);
+}

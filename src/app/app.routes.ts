@@ -8,14 +8,16 @@ import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { AdminPanel } from './features/admin-panel/admin-panel';
 import { RegistroCliente } from './features/registro-cliente/registro-cliente';
+import { Repuestos } from './features/repuestos/repuestos';
 
 export const routes: Routes = [
-  { path: "home", component: Home },
-  { path: "", redirectTo: "login", pathMatch: "full" },
-  { path: "nosotros", component: Nosotros },
-  { path: "servicios", component: Servicios },
-  { path: "usuarios", component: UsuariosComponent, canActivate: [authGuard] },
-  { path: "login", component: Login },
-  { path: "admin", component: AdminPanel, canActivate: [adminGuard] },
-  { path: "registro", component: RegistroCliente }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: Login },
+  { path: 'registro', component: RegistroCliente },
+  { path: 'home', component: Home, canActivate: [authGuard] },
+  { path: 'nosotros', component: Nosotros, canActivate: [authGuard] },
+  { path: 'servicios', component: Servicios, canActivate: [authGuard] },
+  { path: 'repuestos', component: Repuestos, canActivate: [authGuard] },
+  { path: 'usuarios', component: UsuariosComponent, canActivate: [authGuard] },
+  { path: 'admin', component: AdminPanel, canActivate: [adminGuard] },
 ];

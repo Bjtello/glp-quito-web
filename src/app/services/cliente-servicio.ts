@@ -79,4 +79,24 @@ export class ClienteServicio {
       }).catch(err => observer.error(err));
     });
   }
+
+  // Obtener clientes de una fecha específica (para validar disponibilidad)
+  getClientesPorFecha(fecha: string): Observable<Usuario[]> {
+    return new Observable(observer => {
+      const db = getDatabase();
+      const clientesRef = ref(db, 'clientes');
+      get(clientesRef).then(snapshot => {
+        const datos = snapshot.val();
+        if (!datos) {
+          observer.next([]);
+        } else {
+          const arr: Usuario[] = Object.keys(datos)
+            .map(id => ({ ...datos[id], id }))
+            .filter((c: Usuario) => c.fecha === fecha);
+          observer.next(arr);
+        }
+        observer.complete();
+      }).catch(err => observer.error(err));
+    });
+  }
 }
